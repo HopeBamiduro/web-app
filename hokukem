@@ -1,7 +1,7 @@
 pipeline{
 agent any
 tools{
-maven maven3.8.4
+maven "maven3.8.4"
 }
 stages{
 stage("1. gitclone"){
@@ -11,7 +11,7 @@ git "https://github.com/HopeBamiduro/web-app.git"
 }
 stage("2. Build"){
 steps{
-sh "echo build from git hub"
+sh "echo build from github"
 sh "mvn package"
 }
 }
@@ -23,7 +23,7 @@ sh "mvn sonar:sonar"
 }
 stage ("4.back up to nexus"){
 steps{
-sh "echo back up artefact"
+sh "echo backup artefact"
 sh "mvn deploy"
 }
 }
