@@ -1,0 +1,46 @@
+pipeline{
+agent any
+tools{
+maven maven3.8.4
+}
+stages{
+stage("1. gitclone"){
+steps{
+git "https://github.com/HopeBamiduro/web-app.git"
+}
+}
+stage("2. Build"){
+steps{
+sh "echo build from git hub"
+sh "mvn package"
+}
+}
+stage("3. Code Quality"){
+steps{
+sh "echo perfom code quality test"
+sh "mvn sonar:sonar"
+}
+}
+stage ("4.back up to nexus"){
+steps{
+sh "echo back up artefact"
+sh "mvn deploy"
+}
+}
+stage ("5. Deploy to Prod."){
+steps{
+sh "echo deploy to tomcat"
+deploy adapters: [tomcat9(credentialsId: 'Tomcat-cred', path: '', url: 'http://34.210.112.180:7000/')], contextPath: 'jhonson-app', war: 'target/*.war'
+}
+}
+stage ("6. Email Notification"){
+steps{
+sh "echo notify devops team of built success"
+emailext body: 'this is the pipeline project for Johnson application', subject: 'kindly view Johnson app  built status', to: 'hopebamiduro@yahoo.com'  
+}
+}
+}
+}
+
+
+
